@@ -10,6 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.strava.StravaOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/connected/'
+SOCIAL_AUTH_STRAVA_SCOPE = ['activity:read_all']
+SOCIAL_AUTH_STRAVA_KEY = '114433' #Client ID from API Application
+SOCIAL_AUTH_STRAVA_SECRET = 'a4cbbad510435e4dd6c5080c486de828fb7e7752' # Client Secret from API Application
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
