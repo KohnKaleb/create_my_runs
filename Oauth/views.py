@@ -16,24 +16,22 @@ def strava_callback(request, path=''):
     if code:
         access_token = exchange_code_for_token(code)
         
-        url = "https://www.strava.com/api/v3/athlete/activities?before=&after=&page=&per_page="
+        token = access_token["access_token"]
+        
+        url = "https://www.strava.com/api/v3/athlete/activities"
 
-        header = {
-            'Authorization': 'Bearer' + access_token["access_token"]
+        headers = {
+            "Authorization": f"Bearer {token}"
         }
 
-        response = requests.get(url, headers=header).json()
-        
-        #url = "https://www.strava.com/api/v3/activities?before=&after=&page=&per_page=" "Authorization: Bearer [[" + str(access_token['access_token']) + "]]"
-        #request1 = requests.get(url)
-        #result = request1.json()
+        response = requests.get(url, headers=headers)
         
         if access_token:
-            return render(request, 'home.html', {'access_token': response})
+            return render(request, 'home.html', {'access_token': response.json()})
         
 
     
-    return render(request, 'home.html', {'access_token': access_token})
+    return render(request, 'home.html', {'access_token': response.json()})
 
 def exchange_code_for_token(authorization_code):
     token_url = 'https://www.strava.com/api/v3/oauth/token'
@@ -54,15 +52,4 @@ def exchange_code_for_token(authorization_code):
         return None
 
 def strava_redirect(request):
-    strava_auth_url = 'https://www.strava.com/oauth/authorize'
-    #redirect_uri = request.build_absolute_uri(reverse('strava_callback'))
-    scope = 'activity:read_all'
-    params = {
-        'client_id': '114433',
-        'response_type': 'code',
-        'redirect_uri': 'localhost/exchange_token',
-        'approval_prompt': 'force',
-        'scope': scope
-    }
-    strava_login = f"{strava_auth_url}?{urlencode(params)}"
     return redirect('https://www.strava.com/oauth/authorize?client_id=114433&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=activity:read_all')
