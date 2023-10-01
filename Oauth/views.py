@@ -26,12 +26,14 @@ def strava_callback(request, path=''):
 
         response = requests.get(url, headers=headers)
         
+        mapbox_access_token = 'pk.eyJ1IjoibWRrdWhuIiwiYSI6ImNsbjNncmtkdTBmMzAycmw3bzUycGNhdG4ifQ.7E2AdId7t39M9-toFxsuKg'
+        
         if access_token:
             return render(request, 'home.html', {'access_token': response.json()})
         
 
     
-    return render(request, 'home.html', {'access_token': response.json()})
+    return render(request, 'home.html', {'access_token': mapbox_access_token})
 
 def exchange_code_for_token(authorization_code):
     token_url = 'https://www.strava.com/api/v3/oauth/token'

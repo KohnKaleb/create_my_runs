@@ -1,18 +1,22 @@
+<!DOCTYPE html>
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-
-    <title>My Web Page</title>
-</head>
-<body>
-  <h1>
-    Mom I made it
-    {{ access_token }}
-  </h1>
-</body>
+<html>
+  <head>
+    <title>Interactive maps for Django web apps</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+  </head>
+  <body>
+   <h1>Map time!</h1>
+   <div id='map' width="100%" style='height:400px'></div>
+   <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWRrdWhuIiwiYSI6ImNsbjNncmtkdTBmMzAycmw3bzUycGNhdG4ifQ.7E2AdId7t39M9-toFxsuKg';
+    var map = new mapboxgl.Map({
+     container: 'map',
+     center: [-89.40, 43.07],
+     zoom: 10,
+     style: 'mapbox://styles/mapbox/streets-v11'
+    });
+   </script>
+  </body>
 </html>
-<!-- HTML !-->
