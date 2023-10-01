@@ -132,3 +132,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+MAPBOX_KEY = os.getenv('MAPBOX_KEY')
+STRAVA_CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
+STRAVA_CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
