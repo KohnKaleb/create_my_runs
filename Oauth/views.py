@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 import requests
+import polyline
+import json
 from django.conf import settings
 
 
@@ -21,15 +23,16 @@ def strava_callback(request, path=''):
             "Authorization": f"Bearer {token}"
         }
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers).json()
         MAPBOX_KEY = settings.MAPBOX_KEY
         
         
         if response:
-            return render(request, 'home.html', {'access_token': response.json(), 'MAPBOX_KEY': MAPBOX_KEY})
+            poly = response[0]['map']['summary_polyline']
+            coords = polyline.decode(poly, geojson=True)
+            coords = [list(tup) for tup in coords]
+            return render(request, 'home.html', {'access_token': response, 'MAPBOX_KEY': MAPBOX_KEY, 'poly': poly, 'coords': coords})
         
-
-    
     return render(request, 'home.html')
 
 def exchange_code_for_token(authorization_code):
