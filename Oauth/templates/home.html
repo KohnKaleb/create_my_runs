@@ -10,9 +10,9 @@
    <h1>Map time!</h1>
    <div id='map' width="100%" style='height:400px'></div>
    <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoibWRrdWhuIiwiYSI6ImNsbjNncmtkdTBmMzAycmw3bzUycGNhdG4ifQ.7E2AdId7t39M9-toFxsuKg';
+    mapboxgl.accessToken = "{{MAPBOX_KEY}}";
     var map = new mapboxgl.Map({
-     container: 'map',
+     container: 'map',  
      center: [-89.40, 43.07],
      zoom: 10,
      style: 'mapbox://styles/mapbox/streets-v11'

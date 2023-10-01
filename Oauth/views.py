@@ -22,10 +22,11 @@ def strava_callback(request, path=''):
         }
 
         response = requests.get(url, headers=headers)
+        MAPBOX_KEY = settings.MAPBOX_KEY
         
         
         if response:
-            return render(request, 'home.html', {'access_token': response.json()})
+            return render(request, 'home.html', {'access_token': response.json(), 'MAPBOX_KEY': MAPBOX_KEY})
         
 
     
