@@ -5,9 +5,33 @@
     <title>Interactive maps for Django web apps</title>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
   </head>
   <body>
    <h1>Map time!</h1>
+   <label for="slider">Select a Distance:</label>
+   <input type="range" id="distanceSlider" name="slider" min="0" max="50" step="1" value="25">
+   <p>Distance Value: <span id="distanceValue">25</span></p>
+   <label for="slider">Select an Elevation:</label>
+   <input type="range" id="elevationSlider" name="slider" min="0" max="50" step="1" value="25">
+   <p>Elevation Value: <span id="elevationValue">25</span></p>
+   <button class="button5" type="submit">Find Me Runs</button> 
+
+   <script>
+    const distanceSlider = document.getElementById('distanceSlider');
+    const distanceValue = document.getElementById('distanceValue');
+    const elevationSlider = document.getElementById('elevationSlider');
+    const elevationValue = document.getElementById('elevationValue')
+
+    distanceSlider.addEventListener('input', () => {
+        distanceValue.textContent = distanceSlider.value;
+    });
+
+    elevationSlider.addEventListener('input', () => {
+        elevationValue.textContent = elevationSlider.value;
+    });
+
+    </script>
    <div id='map' width="100%" style='height:400px'></div>
    <script>
     mapboxgl.accessToken = "{{MAPBOX_KEY}}";
