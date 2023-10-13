@@ -7,17 +7,18 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
   </head>
   <body>
     <h1>Map time!</h1>
-    <form method="post" action="{% url 'craft_runs' %}">
+    <form method="post" id="criteriaForm">
       <label for="slider">Select a Distance:</label>
       <input
         type="range"
         id="distanceSlider"
-        name="slider"
+        name="distanceSlider"
         min="0"
         max="50"
         step="1"
@@ -28,14 +29,14 @@
       <input
         type="range"
         id="elevationSlider"
-        name="slider"
+        name="elevationSlider"
         min="0"
         max="50"
         step="1"
         value="25"
       />
       <p>Elevation Value: <span id="elevationValue">25</span></p>
-      <button class="button5" type="submit">Find Me Runs</button>
+      <button class="button5" id="findRuns" type="submit">Find Me Runs</button>
     </form>
     <script>
       const distanceSlider = document.getElementById("distanceSlider");
@@ -87,6 +88,22 @@
           },
         });
       });
+    </script>
+    <script>
+        document
+          .getElementById("findRuns")
+          .addEventListener("click", function () {
+            const criteriaForm = $("#criteriaForm").serialize();
+            console.log(criteriaForm);
+            // $.ajax({
+            //   url: "/craft_runs/",
+            //   type: "POST",
+            //   data: criteriaForm,
+            //   success: function (data) {
+            //     console.log(data);
+            //   },
+            // });
+          });
     </script>
   </body>
 </html>

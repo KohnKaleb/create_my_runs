@@ -4,11 +4,13 @@ import requests
 import polyline
 import json
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 from .models import Activities
 
 def login(request):
     return render(request, 'login.html')
 
+@csrf_exempt
 def strava_callback(request, path=''):
     code = request.GET.get('code')
     
