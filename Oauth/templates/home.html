@@ -81,8 +81,13 @@
         zoom: 15,
         style: "mapbox://styles/mapbox/streets-v11",
       });
-      map.on("load", () => {
-        map.addSource("route", {
+
+    </script>
+    <script>
+      function findRuns(event) {
+            event.preventDefault();
+            const criteriaForm = $("#criteriaForm").serialize();
+          /* map.addSource("route", {
           type: "geojson",
           data: {
             type: "Feature",
@@ -106,13 +111,7 @@
             "line-width": 6,
           },
         });
-      });
-    </script>
-    <script>
-      function findRuns(event) {
-            event.preventDefault();
-            const criteriaForm = $("#criteriaForm").serialize();
-            console.log(criteriaForm);
+            console.log(criteriaForm); */
       }
         /*document
           .getElementById("findRuns")
