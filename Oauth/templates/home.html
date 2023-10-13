@@ -32,8 +32,7 @@
   </head>
   <body>
     <h1>Map time!</h1>
-    <form method="post" id="criteriaForm">
-      <label for="slider">Select a Distance:</label>
+      <label for="distanceSlider">Select a Distance:</label>
       <input
         type="range"
         id="distanceSlider"
@@ -44,7 +43,7 @@
         value="5"
       />
       <p>Distance Value: <span id="distanceValue">5</span></p>
-      <label for="slider">Select an Elevation:</label>
+      <label for="elevationSlider">Select an Elevation:</label>
       <input
         type="range"
         id="elevationSlider"
@@ -55,13 +54,12 @@
         value="100"
       />
       <p>Elevation Value: <span id="elevationValue">100</span></p>
-      <button class="button5" id="findRuns" formmethod="findRuns(event)" type="submit">Find Me Runs!</button>
-    </form>
+      <button class="button5" id="findRuns" onclick="getRoutes()" type="submit">Find Me Runs!</button>
     <script>
       const distanceSlider = document.getElementById("distanceSlider");
-      const distanceValue = document.getElementById("distanceValue");
+      const distanceValue = parseInt(document.getElementById("distanceValue").value);
       const elevationSlider = document.getElementById("elevationSlider");
-      const elevationValue = document.getElementById("elevationValue");
+      const elevationValue = parseInt(document.getElementById("elevationValue").value);
 
       distanceSlider.addEventListener("input", () => {
         distanceValue.textContent = distanceSlider.value;
@@ -73,21 +71,23 @@
     </script>
     <div id="map" width="100%" style="height: 400px"></div>
     <script>
-      mapboxgl.accessToken = "{{MAPBOX_KEY}}";
-      const coords = "{{coords}}";
-      const map = new mapboxgl.Map({
-        container: "map",
-        center: [-89.4, 43.07],
-        zoom: 15,
-        style: "mapbox://styles/mapbox/streets-v11",
-      });
+        mapboxgl.accessToken = "{{MAPBOX_KEY}}";
+        const coords = "{{coords}}";
+        const map = new mapboxgl.Map({
+          container: "map",
+          center: [-89.4, 43.07],
+          zoom: 15,
+          style: "mapbox://styles/mapbox/streets-v11",
+      }); 
 
     </script>
     <script>
-      function findRuns(event) {
-            event.preventDefault();
-            const criteriaForm = $("#criteriaForm").serialize();
-          /* map.addSource("route", {
+      function getRoutes() {
+            /** DO A DB LOOKUP BASED ON DISTANCE,ELEVATION **/
+            /** INSERT HTML ELEMENT ABOVE MAP SHOWING TABLE OF RUNS THAT MATCH QUERY **/
+            /** WHEN USER CLICKS ON A RUN IN THE TABLE, THAT ROUTE IS HIGHLIGHTED **/
+            
+          /*map.addSource("route", {
           type: "geojson",
           data: {
             type: "Feature",
@@ -111,7 +111,7 @@
             "line-width": 6,
           },
         });
-            console.log(criteriaForm); */
+            console.log(criteriaForm);
       }
         /*document
           .getElementById("findRuns")
@@ -127,6 +127,7 @@
             //   },
             // });
           }); */
+    }
     </script>
   </body>
 </html>
