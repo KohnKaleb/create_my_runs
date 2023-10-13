@@ -2,13 +2,32 @@
 {% load static %}
 <html>
   <head>
-    <title>Interactive maps for Django web apps</title>
+    <title>Run Crafter - Find Your Run!</title>
     <link
       href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
       rel="stylesheet"
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <style>
+      /* Style for the button */
+      .button5 {
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #3498db; /* Button background color */
+          color: #fff; /* Text color */
+          font-size: 14px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+
+      /* Hover effect */
+      .button5:hover {
+          background-color: #2980b9; /* Darker background color on hover */
+      }
+  </style>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
   </head>
   <body>
@@ -20,23 +39,23 @@
         id="distanceSlider"
         name="distanceSlider"
         min="0"
-        max="50"
+        max="30"
         step="1"
-        value="25"
+        value="5"
       />
-      <p>Distance Value: <span id="distanceValue">25</span></p>
+      <p>Distance Value: <span id="distanceValue">5</span></p>
       <label for="slider">Select an Elevation:</label>
       <input
         type="range"
         id="elevationSlider"
         name="elevationSlider"
         min="0"
-        max="50"
-        step="1"
-        value="25"
+        max="2000"
+        step="50"
+        value="100"
       />
-      <p>Elevation Value: <span id="elevationValue">25</span></p>
-      <button class="button5" id="findRuns" type="submit">Find Me Runs</button>
+      <p>Elevation Value: <span id="elevationValue">100</span></p>
+      <button class="button5" id="findRuns" formmethod="findRuns(event)" type="submit">Find Me Runs!</button>
     </form>
     <script>
       const distanceSlider = document.getElementById("distanceSlider");
@@ -90,7 +109,12 @@
       });
     </script>
     <script>
-        document
+      function findRuns(event) {
+            event.preventDefault();
+            const criteriaForm = $("#criteriaForm").serialize();
+            console.log(criteriaForm);
+      }
+        /*document
           .getElementById("findRuns")
           .addEventListener("click", function () {
             const criteriaForm = $("#criteriaForm").serialize();
@@ -103,7 +127,7 @@
             //     console.log(data);
             //   },
             // });
-          });
+          }); */
     </script>
   </body>
 </html>

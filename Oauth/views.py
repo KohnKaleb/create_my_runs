@@ -18,6 +18,7 @@ def strava_callback(request, path=''):
         access_token = exchange_code_for_token(code)
         
         token = access_token["access_token"]
+        print(code)
         
         url = "https://www.strava.com/api/v3/athlete/activities"
 
