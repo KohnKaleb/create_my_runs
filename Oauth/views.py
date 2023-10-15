@@ -40,7 +40,7 @@ def strava_callback(request, path=''):
             coords = polyline.decode(poly, geojson=True)
             coords = [list(tup) for tup in coords]
             json_coords = json.dumps(coords)
-            return render(request, 'home.html', {'access_token': response, 'MAPBOX_KEY': MAPBOX_KEY, 'poly': poly, 'coords': json_coords})
+            return render(request, 'home.html', {'access_token': response, 'MAPBOX_KEY': MAPBOX_KEY, 'poly': poly, 'coords': json_coords, 'routes':False})
         
     return render(request, 'home.html')
 

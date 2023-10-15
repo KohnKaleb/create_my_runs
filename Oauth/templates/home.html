@@ -32,6 +32,7 @@
   </head>
   <body>
     <h1>Map time!</h1>
+    <form method="get" action="{% url 'craft_runs' %}">
       <label for="distanceSlider">Select a Distance:</label>
       <input
         type="range"
@@ -54,7 +55,8 @@
         value="100"
       />
       <p>Elevation Value: <span id="elevationValue">100</span></p>
-      <button class="button5" id="findRuns" onclick="getRoutes()" type="submit">Find Me Runs!</button>
+      <button class="button5" id="findRuns" type="submit">Find Me Runs!</button>
+    </form>
     <script>
       const distanceSlider = document.getElementById("distanceSlider");
       const distanceValue = parseInt(document.getElementById("distanceValue").value);
@@ -82,52 +84,55 @@
 
     </script>
     <script>
-      function getRoutes() {
-            /** DO A DB LOOKUP BASED ON DISTANCE,ELEVATION **/
-            /** INSERT HTML ELEMENT ABOVE MAP SHOWING TABLE OF RUNS THAT MATCH QUERY **/
-            /** WHEN USER CLICKS ON A RUN IN THE TABLE, THAT ROUTE IS HIGHLIGHTED **/
-            
-          /*map.addSource("route", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "LineString",
-              coordinates: JSON.parse("{{ coords }}"),
-            },
-          },
-        });
-        map.addLayer({
-          id: "route",
-          type: "line",
-          source: "route",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#FF8C00",
-            "line-width": 6,
-          },
-        });
-            console.log(criteriaForm);
+      if ("{{routes}}")
+      {
+        lines = JSON.parse("{{lines|safe}}")
+
+        for (let i = 0; i < lines.length; i++)
+        {
+          line = lines[i]
+          let route = [];
+          let id = `route${i}`;
+
+
+          for (let j = 0; j < line.length; j++) {
+              let coord1 = line[j][0];
+              let coord2 = line[j][1];
+
+              // Push [coord1, coord2] into the result array
+              route.push([coord1, coord2]);
+          }
+          console.log(route)
+          map.on('load', () => {
+            map.addSource(id, {
+              type: "geojson",
+              data: {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                  type: "LineString",
+                  coordinates: route
+                },
+              },
+            });
+            map.addLayer({
+              id: id,
+              type: "line",
+              source: id,
+              layout: {
+                "line-join": "round",
+                "line-cap": "round",
+              },
+              paint: {
+                "line-color": "#FF8C00",
+                "line-width": 6,
+              },
+            });
+          });
+        }
       }
-        /*document
-          .getElementById("findRuns")
-          .addEventListener("click", function () {
-            const criteriaForm = $("#criteriaForm").serialize();
-            console.log(criteriaForm);
-            // $.ajax({
-            //   url: "/craft_runs/",
-            //   type: "POST",
-            //   data: criteriaForm,
-            //   success: function (data) {
-            //     console.log(data);
-            //   },
-            // });
-          }); */
-    }
+    
+
     </script>
   </body>
 </html>
