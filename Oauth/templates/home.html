@@ -12,22 +12,38 @@
     <style>
       /* Style for the button */
       .button5 {
-          display: inline-block;
-          padding: 10px 20px;
-          background-color: #3498db; /* Button background color */
-          color: #fff; /* Text color */
-          font-size: 14px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s;
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3498db; /* Button background color */
+        color: #fff; /* Text color */
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
       }
 
       /* Hover effect */
       .button5:hover {
-          background-color: #2980b9; /* Darker background color on hover */
+        background-color: #2980b9; /* Darker background color on hover */
       }
-  </style>
+
+      #routesTable {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #routesTable th,
+      #routesTable td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: left;
+      }
+
+      #routesTable th {
+        background-color: #f2f2f2;
+      }
+    </style>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
   </head>
   <body>
@@ -59,9 +75,9 @@
     </form>
     <script>
       const distanceSlider = document.getElementById("distanceSlider");
-      const distanceValue = parseInt(document.getElementById("distanceValue").value);
+      const distanceValue = document.getElementById("distanceValue");
       const elevationSlider = document.getElementById("elevationSlider");
-      const elevationValue = parseInt(document.getElementById("elevationValue").value);
+      const elevationValue = document.getElementById("elevationValue");
 
       distanceSlider.addEventListener("input", () => {
         distanceValue.textContent = distanceSlider.value;
@@ -72,38 +88,53 @@
       });
     </script>
     <div id="map" width="100%" style="height: 400px"></div>
+    <table id="routesTable" style="display: none">
+      <tr>
+        <th>Routes</th>
+        <th>Distance</th>
+        <th>Elevation</th>
+      </tr>
+      {% if results %} {% for route in results %}
+      <tr data-route-id="{{ forloop.counter }}">
+        <td>{{ route.name }}</td>
+        <td>{{ route.distance }}</td>
+        <td>{{ route.total_elevation_gain }}</td>
+      </tr>
+      {% endfor %} {% else %}
+      <tr>
+        <td>No routes found</td>
+      </tr>
+      {% endif %}
+    </table>
     <script>
-        mapboxgl.accessToken = "{{MAPBOX_KEY}}";
-        const coords = "{{coords}}";
-        const map = new mapboxgl.Map({
-          container: "map",
-          center: [-89.4, 43.07],
-          zoom: 15,
-          style: "mapbox://styles/mapbox/streets-v11",
-      }); 
-
+      mapboxgl.accessToken = "{{MAPBOX_KEY}}";
+      const coords = "{{coords}}";
+      const map = new mapboxgl.Map({
+        container: "map",
+        center: [-89.4, 43.07],
+        zoom: 15,
+        style: "mapbox://styles/mapbox/streets-v11",
+      });
     </script>
     <script>
-      if ("{{routes}}")
-      {
-        lines = JSON.parse("{{lines|safe}}")
+      if ("{{routes}}" === "True") {
+        document.getElementById("routesTable").style.display = "block";
+        lines = JSON.parse("{{lines|safe}}");
 
-        for (let i = 0; i < lines.length; i++)
-        {
-          line = lines[i]
+        for (let i = 0; i < lines.length; i++) {
+          line = lines[i];
           let route = [];
           let id = `route${i}`;
 
-
           for (let j = 0; j < line.length; j++) {
-              let coord1 = line[j][0];
-              let coord2 = line[j][1];
+            let coord1 = line[j][0];
+            let coord2 = line[j][1];
 
-              // Push [coord1, coord2] into the result array
-              route.push([coord1, coord2]);
+            // Push [coord1, coord2] into the result array
+            route.push([coord1, coord2]);
           }
-          console.log(route)
-          map.on('load', () => {
+          console.log(route);
+          map.on("load", () => {
             map.addSource(id, {
               type: "geojson",
               data: {
@@ -111,7 +142,7 @@
                 properties: {},
                 geometry: {
                   type: "LineString",
-                  coordinates: route
+                  coordinates: route,
                 },
               },
             });
@@ -129,10 +160,24 @@
               },
             });
           });
+          let selectedRouteId = null;
+          const table = document.getElementById("routesTable");
+            table.addEventListener("click", function (event) {
+                const target = event.target;
+                if (target.tagName === "TD") {
+                    const routeId = target.parentElement.getAttribute("data-route-id");
+                    if (routeId) {
+                        if (routeId !== selectedRouteId && selectedRouteId) {
+                            map.setPaintProperty("route"+selectedRouteId, "line-color", "#FF8C00");
+                        }
+
+                        map.setPaintProperty("route"+routeId, "line-color", "#000000");
+                        selectedRouteId = routeId;
+                    }
+                }
+            });
         }
       }
-    
-
     </script>
   </body>
 </html>

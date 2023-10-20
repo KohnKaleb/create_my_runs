@@ -31,7 +31,8 @@ def craft_runs(request):
         lines = []
         show = 5
         it_results = list(results.values())[:show]
-        results = JsonResponse({"runs": list(results.values())[:show]})
+        results = list(results.values())[:show]
+
         for run in it_results:
             poly = run['mappolyline']
             coords = polyline.decode(poly, geojson=True)
