@@ -5,4 +5,4 @@ The aim of this project is pretty simple:  <br />
 (*) login to strava  <br />
 (*) save your runs to our database  <br />
 (*) look for community runs by elevation, distance, or whatever you care about  <br />
-(*) check out new routes <br />
+(*) <br />
