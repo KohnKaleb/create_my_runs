@@ -43,3 +43,44 @@
   box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
   transform: translateY(0);
 }
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.jumbotron {
+  background-image: url('{% static "images/running_bg.jpg" %}');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.jumbotron h1,
+.jumbotron p {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.btn-primary {
+  background-color: #ff6f61;
+  border-color: #ff6f61;
+}
+
+.footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
