@@ -28,6 +28,7 @@ def strava_callback(request, path=''):
 
         response = requests.get(url, headers=headers).json()
         MAPBOX_KEY = settings.MAPBOX_KEY
+        print("working")
         
         if response:
             for activity in response:
@@ -42,10 +43,10 @@ def strava_callback(request, path=''):
             json_coords = json.dumps(coords)
             return render(request, 'home.html', {'access_token': response, 'MAPBOX_KEY': MAPBOX_KEY, 'poly': poly, 'coords': json_coords, 'routes':False})
         
-    return render(request, 'home.html')
+    return render(request, '')
 
 def exchange_code_for_token(authorization_code):
-    token_url = 'https://www.strava.com/api/v3/oauth/token'
+    token_url = 'https://www.strava.com/oauth/token'
     client_id = settings.STRAVA_CLIENT_ID
     client_secret = settings.STRAVA_CLIENT_SECRET
     payload = {
@@ -63,7 +64,7 @@ def exchange_code_for_token(authorization_code):
         return None
 
 def strava_redirect(request):
-    route = 'https://www.strava.com/oauth/authorize?client_id=' + str(settings.STRAVA_CLIENT_ID) + '&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=activity:read_all'
+    route = 'https://www.strava.com/oauth/authorize?client_id=' + str(settings.STRAVA_CLIENT_ID) + '&response_type=code&redirect_uri=http://localhost:8000/exchange_token&approval_prompt=force&scope=activity:read_all'
     return redirect(route)
 
 
