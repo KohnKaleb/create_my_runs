@@ -2,7 +2,7 @@
 {% load static %}
 <html>
   <head>
-    <title>Run Crafter - Find Your Run!</title>
+    <title>Run Crafter</title>
     <link
       href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
       rel="stylesheet"
@@ -10,12 +10,91 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     <style>
-      /* Style for the button */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background-color: #3498db;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .form-group input[type="range"] {
+        width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 8px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        border-radius: 5px;
+      }
+
+      .form-group input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        background: #3498db;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: background 0.3s, transform 0.3s;
+      }
+
+      .form-group input[type="range"]::-webkit-slider-thumb:hover {
+        background: #2980b9;
+        transform: scale(1.2);
+      }
+
+      .form-group input[type="range"]::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        background: #3498db;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: background 0.3s, transform 0.3s;
+      }
+
+      .form-group input[type="range"]::-moz-range-thumb:hover {
+        background: #2980b9;
+        transform: scale(1.2);
+      }
+
+      .form-group p {
+        margin: 5px 0 0;
+      }
+
       .button5 {
         display: inline-block;
         padding: 10px 20px;
-        background-color: #3498db; /* Button background color */
-        color: #fff; /* Text color */
+        background-color: #3498db;
+        color: #fff;
         font-size: 14px;
         border: none;
         border-radius: 4px;
@@ -23,56 +102,102 @@
         transition: background-color 0.3s;
       }
 
-      /* Hover effect */
       .button5:hover {
-        background-color: #2980b9; /* Darker background color on hover */
+        background-color: #2980b9;
+      }
+
+      #map {
+        width: 100%;
+        height: 400px;
+        margin-top: 20px;
       }
 
       #routesTable {
         border-collapse: collapse;
         width: 100%;
+        margin-top: 20px;
+        display: none;
       }
 
       #routesTable th,
       #routesTable td {
-        border: 1px solid black;
-        padding: 5px;
+        border: 1px solid #ddd;
+        padding: 10px;
         text-align: left;
       }
 
       #routesTable th {
-        background-color: #f2f2f2;
+        background-color: #3498db;
+        color: white;
+      }
+
+      #routesTable tr:hover {
+        background-color: #f1f1f1;
       }
     </style>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
   </head>
   <body>
-    <h1>Map time!</h1>
-    <form method="get" action="{% url 'craft_runs' %}">
-      <label for="distanceSlider">Select a Distance:</label>
-      <input
-        type="range"
-        id="distanceSlider"
-        name="distanceSlider"
-        min="0"
-        max="30"
-        step="1"
-        value="5"
-      />
-      <p>Distance Value: <span id="distanceValue">5</span></p>
-      <label for="elevationSlider">Select an Elevation:</label>
-      <input
-        type="range"
-        id="elevationSlider"
-        name="elevationSlider"
-        min="0"
-        max="2000"
-        step="50"
-        value="100"
-      />
-      <p>Elevation Value: <span id="elevationValue">100</span></p>
-      <button class="button5" id="findRuns" type="submit">Find Me Runs!</button>
-    </form>
+    <div class="header">
+      <h1>Run Crafter</h1>
+      <p>Your ultimate companion for tracking and crafting your running experiences</p>
+    </div>
+    <div class="container">
+      <form method="get" action="{% url 'craft_runs' %}">
+        <div class="form-group">
+          <label for="distanceSlider">Select a Distance:</label>
+          <input
+            type="range"
+            id="distanceSlider"
+            name="distanceSlider"
+            min="0"
+            max="30"
+            step="1"
+            value="5"
+          />
+          <p>Distance Value: <span id="distanceValue">5</span></p>
+        </div>
+        <div class="form-group">
+          <label for="elevationSlider">Select an Elevation:</label>
+          <input
+            type="range"
+            id="elevationSlider"
+            name="elevationSlider"
+            min="0"
+            max="2000"
+            step="50"
+            value="100"
+          />
+          <p>Elevation Value: <span id="elevationValue">100</span></p>
+        </div>
+        <button class="button5" id="findRuns" type="submit">Find Me Runs!</button>
+      </form>
+      <div id="map"></div>
+      <table id="routesTable">
+        <thead>
+          <tr>
+            <th>Route Name</th>
+            <th>Distance</th>
+            <th>Elevation Gain</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if results %}
+          {% for route in results %}
+          <tr data-route-id="{{ forloop.counter }}">
+            <td>{{ route.name }}</td>
+            <td>{{ route.distance }} km</td>
+            <td>{{ route.total_elevation_gain }} m</td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="3">No routes found</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
     <script>
       const distanceSlider = document.getElementById("distanceSlider");
       const distanceValue = document.getElementById("distanceValue");
@@ -86,54 +211,24 @@
       elevationSlider.addEventListener("input", () => {
         elevationValue.textContent = elevationSlider.value;
       });
-    </script>
-    <div id="map" width="100%" style="height: 400px"></div>
-    <table id="routesTable" style="display: none">
-      <tr>
-        <th>Routes</th>
-        <th>Distance</th>
-        <th>Elevation</th>
-      </tr>
-      {% if results %} {% for route in results %}
-      <tr data-route-id="{{ forloop.counter }}">
-        <td>{{ route.name }}</td>
-        <td>{{ route.distance }}</td>
-        <td>{{ route.total_elevation_gain }}</td>
-      </tr>
-      {% endfor %} {% else %}
-      <tr>
-        <td>No routes found</td>
-      </tr>
-      {% endif %}
-    </table>
-    <script>
-      mapboxgl.accessToken = "{{MAPBOX_KEY}}";
-      const coords = "{{coords}}";
+
+      mapboxgl.accessToken = "{{ MAPBOX_KEY }}";
+      const coords = "{{ coords }}";
       const map = new mapboxgl.Map({
         container: "map",
         center: [-89.4, 43.07],
         zoom: 15,
         style: "mapbox://styles/mapbox/streets-v11",
       });
-    </script>
-    <script>
-      if ("{{routes}}" === "True") {
-        document.getElementById("routesTable").style.display = "block";
-        lines = JSON.parse("{{lines|safe}}");
 
-        for (let i = 0; i < lines.length; i++) {
-          line = lines[i];
-          let route = [];
-          let id = `route${i}`;
+      if ("{{ routes }}" === "True") {
+        document.getElementById("routesTable").style.display = "table";
+        const lines = JSON.parse("{{ lines|safe }}");
 
-          for (let j = 0; j < line.length; j++) {
-            let coord1 = line[j][0];
-            let coord2 = line[j][1];
+        lines.forEach((line, index) => {
+          const route = line.map(coord => [coord[0], coord[1]]);
+          const id = `route${index}`;
 
-            // Push [coord1, coord2] into the result array
-            route.push([coord1, coord2]);
-          }
-          console.log(route);
           map.on("load", () => {
             map.addSource(id, {
               type: "geojson",
@@ -160,23 +255,23 @@
               },
             });
           });
-          let selectedRouteId = null;
-          const table = document.getElementById("routesTable");
-            table.addEventListener("click", function (event) {
-                const target = event.target;
-                if (target.tagName === "TD") {
-                    const routeId = target.parentElement.getAttribute("data-route-id");
-                    if (routeId) {
-                        if (routeId !== selectedRouteId && selectedRouteId) {
-                            map.setPaintProperty("route"+selectedRouteId, "line-color", "#FF8C00");
-                        }
+        });
 
-                        map.setPaintProperty("route"+routeId, "line-color", "#000000");
-                        selectedRouteId = routeId;
-                    }
-                }
-            });
-        }
+        let selectedRouteId = null;
+        const table = document.getElementById("routesTable");
+        table.addEventListener("click", function (event) {
+          const target = event.target;
+          if (target.tagName === "TD") {
+            const routeId = target.parentElement.getAttribute("data-route-id");
+            if (routeId) {
+              if (routeId !== selectedRouteId && selectedRouteId) {
+                map.setPaintProperty("route" + selectedRouteId, "line-color", "#FF8C00");
+              }
+              map.setPaintProperty("route" + routeId, "line-color", "#000000");
+              selectedRouteId = routeId;
+            }
+          }
+        });
       }
     </script>
   </body>
